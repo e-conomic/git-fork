@@ -1,0 +1,14 @@
+{
+  "name": "git-fork",
+  "description": "Command line tool to fork and setup a feature branch for Github projects",
+  "version": "0.0.0",
+  "repository": "e-conomic/git-fork",
+  "bin": {
+    "git-fork": "./fork.js"
+  },
+  "dependencies": {
+    "ghauth": "^0.1.0",
+    "github-api": "^0.7.0",
+    "minimist": "0.0.8"
+  }
+}
