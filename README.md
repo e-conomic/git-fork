@@ -14,13 +14,11 @@ If you want to add a new feature branch either run the command again or go to th
 
 	git-fork new-feature-branch
 
-The first time you run it it will ask for Github credentials that are used to generate a personal oauth token
+The first time you run `git-fork` it will ask for Github credentials that are used to generate a personal oauth token
 which is stored in `~/.config/git-fork.json`. No credentials are stored.
 
-It will setup up tracking for you so to push your changes to your fork you just need to
-go to the local repo and do a `git push` from your branch.
-
-The upstream repo that you forked from is added as the `upstream` remote
+The upstream repo that you forked from is added as the `upstream` remote and your local master is updated with changes from `upstream/master` everytime you do a new fork.
+When you do a fork it will setup tracking for you. To push your changes to your fork simply go to the local repo and do a `git push` from your branch.
 
 ## License
 
