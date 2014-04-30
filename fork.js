@@ -83,7 +83,7 @@ var parse = function(github, branch, cwd) {
 	var user = github.split('/')[0];
 
 	ready({
-		branch: branch,
+		branch: branch || 'master',
 		username: user,
 		repo: repo,
 		cwd: cwd || repo
