@@ -5,7 +5,7 @@ var proc = require('child_process');
 var ghauth = require('ghauth');
 var minimist = require('minimist');
 var Github = require('github-api');
-var openurl = require('openurl').open;
+var opn = require('opn');
 
 var onerror = function(err) {
 	console.error(err.message || err);
@@ -114,7 +114,7 @@ if ((!argv['pull-request'] && !argv['p']) &&( !args.length || (args[0].indexOf('
 
 if (argv['pull-request'] || argv['p']) {
 	findRemote('origin', function(err, upstream) {
-		openurl('http://github.com/' + upstream + '/compare', function() {
+		opn('http://github.com/' + upstream + '/compare', function() {
 			console.log('Pull request opened in browser');
 			process.exit(0);
 		});
