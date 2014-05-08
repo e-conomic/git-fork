@@ -14,6 +14,12 @@ If you want to add a new feature branch either run the command again or go to th
 
 	git-fork new-feature-branch
 
+After you have finished committing your changes you can do
+
+  git-fork --pull-request
+
+and the pull request screen window will be opened in your browser. You can also use the -p option as short for pull request.
+
 The first time you run `git-fork` it will ask for Github credentials that are used to generate a personal oauth token
 which is stored in `~/.config/git-fork.json`. No credentials are stored.
 
