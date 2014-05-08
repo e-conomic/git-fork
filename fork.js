@@ -5,6 +5,7 @@ var proc = require('child_process');
 var ghauth = require('ghauth');
 var minimist = require('minimist');
 var Github = require('github-api');
+var openurl = require('openurl').open;
 
 var onerror = function(err) {
 	console.error(err.message || err);
@@ -90,33 +91,42 @@ var parse = function(github, branch, cwd) {
 	});
 };
 
-var findUpstream = function(cb) {
+var findRemote = function(remoteType, cb) {
 	proc.exec('git remote -v', function(err, stdout) {
 		if (err) return cb(new Error('You need to be in a git repo if you do not provide the repo name'));
 
-		var upstream = stdout.trim().split('\n').filter(function(line) {
-			return line.indexOf('upstream') === 0;
+		var remote = stdout.trim().split('\n').filter(function(line) {
+			return line.indexOf(remoteType) === 0;
 		})[0];
 
-		if (!upstream) return cb(new Error('No upstream remote set'));
-		cb(null, upstream.split(/\s+/)[1].replace(/\.git$/, '').split('/').slice(-2).join('/'));
+		if (!remote) return cb(new Error('No '+remoteType+' remote set'));
+		cb(null, remote.split(/\s+/)[1].replace(/\.git$/, '').split('/').slice(-2).join('/'));
 	});
 };
 
-var argv = minimist(process.argv);
+var argv = minimist(process.argv, {boolean: ['pull-request', 'p']});
 var args = argv._.slice(2);
 
-if (!args.length || (args[0].indexOf('/') > -1 && args.length < 2) || (args[0].indexOf('/') === -1 && args.length > 1)) {
+if ((!argv['pull-request'] && !argv['p']) &&( !args.length || (args[0].indexOf('/') > -1 && args.length < 2) || (args[0].indexOf('/') === -1 && args.length > 1))) {
 	console.error('Usage: git-fork [username/repo]? [feature-branch]');
 	process.exit(1);
 }
 
-findUpstream(function(err, upstream) {
-	if (args.length === 1 && err) return onerror(err);
-	if (args.length === 1) return parse(upstream, args[0], '.');
+if (argv['pull-request'] || argv['p']) {
+	findRemote('origin', function(err, upstream) {
+		openurl('http://github.com/' + upstream + '/compare', function() {
+			console.log('Pull request opened in browser');
+			process.exit(0);
+		});
+	});
+} else {
+	findRemote('upstream', function(err, upstream) {
+		if (args.length === 1 && err) return onerror(err);
+		if (args.length === 1) return parse(upstream, args[0], '.');
 
-	if (upstream && args[0] !== upstream) return onerror('Upstream does not match current repository');
-	if (upstream) return parse(upstream, args[1], '.');
+		if (upstream && args[0] !== upstream) return onerror('Upstream does not match current repository');
+		if (upstream) return parse(upstream, args[1], '.');
 
-	parse(args[0], args[1]);
-});
+		parse(args[0], args[1]);
+	});
+}
