@@ -16,7 +16,7 @@ If you want to add a new feature branch either run the command again or go to th
 
 After you have finished committing your changes you can do
 
-  git-fork --pull-request
+	git-fork --pull-request
 
 and the pull request screen window will be opened in your browser. You can also use the -p option as short for pull request.
 
