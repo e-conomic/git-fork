@@ -104,6 +104,13 @@ var findRemote = function(remoteType, cb) {
 	});
 };
 
+var currentBranch = function(cb) {
+	proc.exec('git rev-parse --abbrev-ref HEAD', function(err, stdout) {
+		if (err) return cb(new Error('Could not get current branch'));
+		cb(null, stdout.trim());
+	});
+};
+
 var argv = minimist(process.argv, {boolean: ['pull-request', 'p']});
 var args = argv._.slice(2);
 
@@ -114,9 +121,13 @@ if ((!argv['pull-request'] && !argv['p']) &&( !args.length || (args[0].indexOf('
 
 if (argv['pull-request'] || argv['p']) {
 	findRemote('origin', function(err, upstream) {
-		opn('http://github.com/' + upstream + '/compare', function() {
-			console.log('Pull request opened in browser');
-			process.exit(0);
+		if (err) return onerror(err);
+		currentBranch(function(err, branch) {
+			if (err) return onerror(err);
+			opn('http://github.com/' + upstream + '/compare/' + branch, function() {
+				console.log('Pull request opened in browser');
+				process.exit(0);
+			});
 		});
 	});
 } else {
