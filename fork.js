@@ -124,7 +124,7 @@ if (argv['pull-request'] || argv['p']) {
 		if (err) return onerror(err);
 		currentBranch(function(err, branch) {
 			if (err) return onerror(err);
-			opn('http://github.com/' + upstream + '/compare/' + branch);
+			opn('https://github.com/' + upstream + '/compare/' + branch);
 		});
 	});
 } else {
