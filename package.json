@@ -1,7 +1,7 @@
 {
   "name": "git-fork",
   "description": "Command line tool to fork and setup a feature branch for Github projects",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "repository": "e-conomic/git-fork",
   "bin": {
     "git-fork": "./fork.js"
